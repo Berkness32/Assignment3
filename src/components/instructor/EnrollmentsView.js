@@ -16,7 +16,7 @@ const EnrollmentsView = (props) => {
 
     return(
         <> 
-            <h3>Not implemented</h3>   
+            <h3>Testing</h3>   
         </>
     );
 }
