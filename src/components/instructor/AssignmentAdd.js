@@ -9,7 +9,7 @@ import { SERVER_URL } from '../../Constants';
 
 const AssignmentAdd = (props) => {
     const [open, setOpen] = useState(false);
-    const [assignment, setAssignment] = useState({ title: '', dueDate: '' });
+    const [assignment, setAssignment] = useState({ title: '', dueDate: '', secNo: props.secNo });
     const [message, setMessage] = useState('');
 
     const handleClickOpen = () => {
@@ -18,7 +18,7 @@ const AssignmentAdd = (props) => {
 
     const handleClose = () => {
         setOpen(false);
-        setAssignment({ title: '', dueDate: '' });
+        setAssignment({ title: '', dueDate: '', secNo: props.secNo });
         setMessage('');
     };
 
@@ -39,6 +39,7 @@ const AssignmentAdd = (props) => {
             if (response.ok) {
                 setMessage('Assignment added successfully');
                 handleClose();
+                props.onAssignmentAdded();
             } else {
                 const rc = await response.json();
                 setMessage(`Error: ${rc.message}`);

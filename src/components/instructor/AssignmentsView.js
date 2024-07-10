@@ -8,11 +8,16 @@ import Button from '@mui/material/Button';
 
 const AssignmentsView = (props) => {
     const location = useLocation();
-    const { secNo, courseId, secId } = location.state;
+    const { secNo, courseId, secId } = location.state || {};
     const [assignments, setAssignments] = useState([]);
     const [message, setMessage] = useState('');
 
     useEffect(() => {
+        if (!secNo) {
+            setMessage('Section number is missing');
+            return;
+        }
+
         const fetchAssignments = async () => {
             try {
                 const response = await fetch(`${SERVER_URL}/sections/${secNo}/assignments`);
@@ -51,30 +56,34 @@ const AssignmentsView = (props) => {
         <>
             <h3>Assignments</h3>
             <h4>{message}</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Due Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {assignments.map(a => (
-                        <tr key={a.id}>
-                            <td>{a.id}</td>
-                            <td>{a.title}</td>
-                            <td>{a.dueDate}</td>
-                            <td>
-                                <AssignmentUpdate assignment={a} />
-                                <AssignmentGrade assignmentId={a.id} />
-                                <Button onClick={() => handleDelete(a.id)}>Delete</Button>
-                            </td>
+            {assignments.length > 0 ? (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Due Date</th>
+                            <th>Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {assignments.map(a => (
+                            <tr key={a.id}>
+                                <td>{a.id}</td>
+                                <td>{a.title}</td>
+                                <td>{a.dueDate}</td>
+                                <td>
+                                    <AssignmentUpdate assignment={a} />
+                                    <AssignmentGrade assignmentId={a.id} />
+                                    <Button onClick={() => handleDelete(a.id)}>Delete</Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>No assignments available.</p>
+            )}
             <AssignmentAdd />
         </>
     );
