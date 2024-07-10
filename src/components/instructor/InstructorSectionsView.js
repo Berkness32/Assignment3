@@ -22,8 +22,8 @@ const InstructorSectionsView = (props) => {
     "building",
     "room",
     "times",
-    "assignments",
     "enrollments",
+    "assignments",
   ];
   const [sections, setSections] = useState([]);
   const [message, setMessage] = useState("");
@@ -81,12 +81,12 @@ const InstructorSectionsView = (props) => {
                   <td>{section.times}</td>
                   <td>
                     <Link to="/enrollments" state={section}>
-                      View Enrollments
+                      Enrollments
                     </Link>
                   </td>
                   <td>
                     <Link to="/assignments" state={section}>
-                      View Assignments
+                      Assignments
                     </Link>
                   </td>
                 </tr>
