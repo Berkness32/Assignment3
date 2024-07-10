@@ -8,17 +8,19 @@ import TextField from '@mui/material/TextField';
 import { SERVER_URL } from '../../Constants';
 
 const AssignmentAdd = (props) => {
+    const { courseId, secNo } = props;
     const [open, setOpen] = useState(false);
-    const [assignment, setAssignment] = useState({ title: '', dueDate: '', secNo: props.secNo });
+    const [assignment, setAssignment] = useState({ title: '', dueDate: '' , courseId, secNo});
     const [message, setMessage] = useState('');
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+
     const handleClose = () => {
         setOpen(false);
-        setAssignment({ title: '', dueDate: '', secNo: props.secNo });
+        setAssignment({ title: '', dueDate: '', courseId, secNo});
         setMessage('');
     };
 
@@ -39,7 +41,6 @@ const AssignmentAdd = (props) => {
             if (response.ok) {
                 setMessage('Assignment added successfully');
                 handleClose();
-                props.onAssignmentAdded();
             } else {
                 const rc = await response.json();
                 setMessage(`Error: ${rc.message}`);

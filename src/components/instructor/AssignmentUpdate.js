@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import { SERVER_URL } from '../../Constants';
 
 const AssignmentUpdate = (props) => {
-    const { assignment, onAssignmentUpdated } = props;
+    const { assignment } = props;
     const [open, setOpen] = useState(false);
     const [updatedAssignment, setUpdatedAssignment] = useState(assignment);
     const [message, setMessage] = useState('');
@@ -39,7 +39,6 @@ const AssignmentUpdate = (props) => {
             if (response.ok) {
                 setMessage('Assignment updated successfully');
                 handleClose();
-                onAssignmentUpdated();
             } else {
                 const rc = await response.json();
                 setMessage(`Error: ${rc.message}`);
