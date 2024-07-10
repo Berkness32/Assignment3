@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { SERVER_URL } from '../../Constants';
 
 const AssignmentGrade = (props) => {
+    const { assignmentId } = props;
     const [grades, setGrades] = useState([]);
     const [message, setMessage] = useState('');
 
     useEffect(() => {
         const fetchGrades = async () => {
             try {
-                const response = await fetch(`${SERVER_URL}/assignments/${props.assignmentId}/grades`);
+                const response = await fetch(`${SERVER_URL}/assignments/${assignmentId}/grades`);
                 if (response.ok) {
                     const data = await response.json();
                     setGrades(data);
@@ -22,7 +24,7 @@ const AssignmentGrade = (props) => {
             }
         };
         fetchGrades();
-    }, [props.assignmentId]);
+    }, [assignmentId]);
 
     const handleChange = (event, gradeId) => {
         const updatedGrades = grades.map(g => {
