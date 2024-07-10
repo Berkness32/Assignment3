@@ -9,66 +9,78 @@
 
 import React, { useState, useEffect } from 'react';
 import { SERVER_URL } from "../../Constants";
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+
 
 const AssignmentsStudentView = () => {
-  const headers = [
-    "Course Id",
-    "Assignment Title",
-    "Assignment DueDate",
-    "Score"
-  ];
-  const [assignments, setAssignments] = useState([]);
-  const [message, setMessage] = useState('');
-  const studentId = 3; // Use studentId=3 for now
-  const year = 2024; // Example year, adjust as necessary
-  const semester = "Fall"; // Example semester, adjust as necessary
-
-  const fetchAssignments = async () => {
-    try {
-      const response = await fetch(`${SERVER_URL}/assignments?studentId=${studentId}&year=${year}&semester=${semester}`);
-      if (response.ok) {
-        const data = await response.json();
-        console.log(data);
-        setAssignments(data);
-      } else {
-        const json = await response.json();
-        console.log(json);
-        setMessage("response error: " + json.message);
+    const headers = ['Course Id', 'Assignment Title', 'Assignment DueDate', 'Score'];
+    const [assignments, setAssignments] = useState([]);
+    const [message, setMessage] = useState('');
+    const [year, setYear] = useState('');
+    const [semester, setSemester] = useState('');
+    const studentId = 3; // Use studentId=3 for now
+  
+    const fetchAssignments = async () => {
+      if (!year || !semester) {
+        setMessage('Please enter both year and semester');
+        return;
       }
-    } catch (err) {
-      setMessage("network error: " + err);
-    }
+      try {
+        const response = await fetch(`${SERVER_URL}/assignments?studentId=${studentId}&year=${year}&semester=${semester}`);
+        if (response.ok) {
+          const data = await response.json();
+          setAssignments(data);
+        } else {
+          const json = await response.json();
+          setMessage('response error: ' + json.message);
+        }
+      } catch (err) {
+        setMessage('network error: ' + err);
+      }
+    };
+  
+    const handleFetchClick = () => {
+      fetchAssignments();
+    };
+  
+    return (
+      <div>
+        <h3>Assignments</h3>
+        <div>
+          <label>
+            Year:
+            <input type="text" value={year} onChange={(e) => setYear(e.target.value)} />
+          </label>
+          <label>
+            Semester:
+            <input type="text" value={semester} onChange={(e) => setSemester(e.target.value)} />
+          </label>
+          <button onClick={handleFetchClick}>Fetch Assignments</button>
+        </div>
+        <h4>{message}</h4>
+        {assignments.length > 0 && (
+          <table className="Center">
+            <thead>
+              <tr>
+                {headers.map((header, idx) => (
+                  <th key={idx}>{header}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {assignments.map((assignment, idx) => (
+                <tr key={idx}>
+                  <td>{assignment.courseId}</td>
+                  <td>{assignment.title}</td>
+                  <td>{assignment.dueDate}</td>
+                  <td>{assignment.score}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
   };
-
-  useEffect(() => {
-    fetchAssignments();
-  }, []);
-
-  return (
-    <div>
-      <h3>Assignments</h3>
-      <h4>{message}</h4>
-      <table className="Center">
-        <thead>
-          <tr>
-            {headers.map((header, idx) => (
-              <th key={idx}>{header}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {assignments.map((assignment, idx) => (
-            <tr key={idx}>
-              <td>{assignment.courseId}</td>
-              <td>{assignment.title}</td>
-              <td>{assignment.dueDate}</td>
-              <td>{assignment.score}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
-
-export default AssignmentsStudentView;
+  
+  export default AssignmentsStudentView;
