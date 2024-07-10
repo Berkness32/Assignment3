@@ -21,13 +21,14 @@ const AssignmentsStudentView = () => {
   const [message, setMessage] = useState('');
   const studentId = 3; // Use studentId=3 for now
   const year = 2024; // Example year, adjust as necessary
-  const semester = "Spring"; // Example semester, adjust as necessary
+  const semester = "Fall"; // Example semester, adjust as necessary
 
   const fetchAssignments = async () => {
     try {
       const response = await fetch(`${SERVER_URL}/assignments?studentId=${studentId}&year=${year}&semester=${semester}`);
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setAssignments(data);
       } else {
         const json = await response.json();
