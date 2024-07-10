@@ -100,5 +100,3 @@ const InstructorSectionsView = (props) => {
 };
 
 export default InstructorSectionsView;
-
-
