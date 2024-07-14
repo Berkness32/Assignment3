@@ -5,85 +5,54 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { SERVER_URL } from '../../Constants';
 
-const AssignmentAdd = (props) => {
-    const { courseId, secNo } = props;
+const AssignmentAdd = (props)  => {
+
     const [open, setOpen] = useState(false);
-    const [assignment, setAssignment] = useState({ title: '', dueDate: '' , courseId, secNo});
-    const [message, setMessage] = useState('');
+    const [editMessage, setEditMessage] = useState('');
+    const [assignment, setAssignment] = useState({ title:'', dueDate:''});
 
-    const handleClickOpen = () => {
+    /*
+     *  dialog for add assignment
+     */
+    const editOpen = () => {
         setOpen(true);
+        setEditMessage('');
+        setAssignment({ title:'', dueDate:''});
     };
 
-
-    const handleClose = () => {
+    const editClose = () => {
         setOpen(false);
-        setAssignment({ title: '', dueDate: '', courseId, secNo});
-        setMessage('');
+        setAssignment({ title:'', dueDate:''});
+        setEditMessage('');
     };
 
-    const handleChange = (event) => {
-        setAssignment({ ...assignment, [event.target.name]: event.target.value });
-    };
+    const editChange = (event) => {
+        setAssignment({...assignment,  [event.target.name]:event.target.value})
+    }
 
-    const handleSave = async () => {
-        try {
-            const response = await fetch(`${SERVER_URL}/assignments`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(assignment),
-            });
-
-            if (response.ok) {
-                setMessage('Assignment added successfully');
-                handleClose();
-            } else {
-                const rc = await response.json();
-                setMessage(`Error: ${rc.message}`);
-            }
-        } catch (err) {
-            setMessage(`Network error: ${err}`);
-        }
-    };
+    const onSave = () => {
+        props.save(assignment);
+        editClose();
+    }
 
     return (
         <>
-            <Button onClick={handleClickOpen}>Add Assignment</Button>
-            <Dialog open={open} onClose={handleClose}>
+            <Button onClick={editOpen}>Add Assignment</Button>
+            <Dialog open={open} >
                 <DialogTitle>Add Assignment</DialogTitle>
-                <DialogContent>
-                    <h4>{message}</h4>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Title"
-                        name="title"
-                        fullWidth
-                        value={assignment.title}
-                        onChange={handleChange}
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Due Date"
-                        name="dueDate"
-                        type="date"
-                        fullWidth
-                        value={assignment.dueDate}
-                        onChange={handleChange}
-                        InputLabelProps={{ shrink: true }}
-                    />
+                <DialogContent  style={{paddingTop: 20}} >
+                    <h4>{editMessage}</h4>
+                    <TextField style={{padding:10}} autoFocus fullWidth label="title" name="title" value={assignment.title} onChange={editChange}  /> 
+                    <TextField style={{padding:10}} fullWidth label="dueDate" name="dueDate" value={assignment.dueDate} onChange={editChange}  /> 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="secondary">Close</Button>
-                    <Button onClick={handleSave} color="primary">Save</Button>
+                    <Button color="secondary" onClick={editClose}>Close</Button>
+                    <Button color="primary" onClick={onSave}>Save</Button>
                 </DialogActions>
-            </Dialog>
-        </>
-    );
-};
+            </Dialog> 
+        </>                       
+    )
+}
 
 export default AssignmentAdd;
