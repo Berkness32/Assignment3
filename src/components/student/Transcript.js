@@ -1,62 +1,57 @@
 import React, {useState, useEffect} from 'react';
-import { SERVER_URL } from '../../Constants';
-
-// students gets a list of all courses taken and grades
-// use the URL /transcript?studentId=
-// the REST api returns a list of EnrollmentDTO objects 
-// the table should have columns for 
-//  Year, Semester, CourseId, SectionId, Title, Credits, Grade
+import {SERVER_URL} from '../../Constants';
 
 const Transcript = (props) => {
-    const [transcript, setTranscript] = useState([]);
-    const [message, setMessage] = useState('');
 
-    useEffect(() => {
-        const fetchTranscript = async () => {
-            try {
-                const response = await fetch(`${SERVER_URL}/transcripts?studentId=3`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setTranscript(data);
-                } else {
-                    const rc = await response.json();
-                    setMessage(`Error: ${rc.message}`);
-                }
-            } catch (err) {
-                setMessage(`Network error: ${err}`);
+    const [message, setMessage] = useState('');
+    const [courses, setCourses] = useState([]);
+
+   // removed hardcoded studentId=3 after login security implemented
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`${SERVER_URL}/transcripts?studentId=3`);
+            if (response.ok) {
+                const data = await response.json();
+                setCourses(data);
+            } else {
+                const rc = await response.json();
+                setMessage(rc.message);
             }
-        };
-        fetchTranscript();
+        } catch (err) {
+            setMessage("network error "+err);
+        }
+    }
+
+    useEffect( () => {
+        fetchData();
     }, []);
 
+    const headers=['Year', 'Semester', 'CourseId', 'Section', 'Title', 'Credits', 'Grade'];
+     
     return(
         <> 
-            <h3>Transcript</h3>
-            <h4>{message}</h4>
-            <table>
+            <h3>Transcript</h3>   
+            <h4>{message}</h4>      
+            {(courses.length > 0) ? (<p>Student id : {courses[0].studentId} <br/>  Student name : {courses[0].name} </p> ) : '' }
+            <table className="Center" > 
                 <thead>
                     <tr>
-                        <th>Year</th>
-                        <th>Semester</th>
-                        <th>Course ID</th>
-                        <th>Section ID</th>
-                        <th>Title</th>
-                        <th>Credits</th>
-                        <th>Grade</th>
+                        {headers.map((s, idx) => (<th key={idx}>{s}</th>))}
                     </tr>
                 </thead>
                 <tbody>
-                    {transcript.map(enrollment => (
-                        <tr key={enrollment.enrollmentId}>
-                            <td>{enrollment.year}</td>
-                            <td>{enrollment.semester}</td>
-                            <td>{enrollment.courseId}</td>
-                            <td>{enrollment.sectionId}</td>
-                            <td>{enrollment.title}</td>
-                            <td>{enrollment.credits}</td>
-                            <td>{enrollment.grade}</td>
-                        </tr>
-                    ))}
+                    {courses.map((c) => (
+                            <tr key={c.enrollmentId}>
+                            <td>{c.year}</td>
+                            <td>{c.semester}</td>
+                            <td>{c.courseId}</td>
+                            <td>{c.sectionId}</td>
+                            <td>{c.title}</td>
+                            <td>{c.credits}</td>
+                            <td>{c.grade}</td>
+                            </tr>
+                        ))}
                 </tbody>
             </table>
         </>
