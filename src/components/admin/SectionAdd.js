@@ -43,7 +43,7 @@ const SectionAdd = (props)  => {
             setEditMessage('Must enter data for courseId secId, year semester');
         } else {
             props.save(section);
-            editClose();
+            //editClose();
         }
     }
 

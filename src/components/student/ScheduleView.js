@@ -88,7 +88,7 @@ const ScheduleView = (props) => {
                 </tbody>
             </table>
             
-            <button type="submit" onClick={fetchEnrollments}>Get Schedule</button>
+            <button id="getSchedule" type="submit" onClick={fetchEnrollments}>Get Schedule</button>
             <br/> 
             <br/>
             <table className="Center">
