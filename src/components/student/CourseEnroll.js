@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import Button from '@mui/material/Button';
-import {SERVER_URL} from '../../Constants';
+import {REGISTRAR_URL} from '../../Constants';
 
 const CourseEnroll = (props) => {
      
@@ -14,7 +14,7 @@ const CourseEnroll = (props) => {
     const fetchSections = async () => {
         // get list of open sections for enrollment
         try {
-            const response = await fetch(`${SERVER_URL}/sections/open`);
+            const response = await fetch(`${REGISTRAR_URL}/sections/open`);
             if (response.ok) {
                 const data = await response.json();
                 setSections(data);
@@ -33,7 +33,7 @@ const CourseEnroll = (props) => {
 
     const addSection = async (secNo) => {
         try {
-            const response = await fetch(`${SERVER_URL}/enrollments/sections/${secNo}?studentId=3`,
+            const response = await fetch(`${REGISTRAR_URL}/enrollments/sections/${secNo}?studentId=3`,
                 {
                     method: 'POST',
                     headers: {
