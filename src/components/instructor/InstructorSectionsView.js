@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from "react-router-dom";
 import {useLocation} from 'react-router-dom';
-import {REGISTRAR_URL} from '../../Constants';
+import {SERVER_URL} from '../../Constants';
 
 
 const InstructorSectionsView = (props) => {
@@ -17,7 +17,7 @@ const InstructorSectionsView = (props) => {
             setMessage("enter year and semester")
         }
         try {
-            const response = await fetch(`${REGISTRAR_URL}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`);
+            const response = await fetch(`${SERVER_URL}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`);
             if (response.ok) {
                 const data = await response.json();
                 setSections(data);
